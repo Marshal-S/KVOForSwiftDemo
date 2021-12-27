@@ -40,11 +40,15 @@ class __LLKVOInfo: NSObject {
 }
 
 class LLKVOController: NSObject {
-    var infosMap: NSMapTable<AnyObject, NSMutableSet>
-    var semaphore: DispatchSemaphore
+    private var infosMap: NSMapTable<AnyObject, NSMutableSet>
+    private var semaphore: DispatchSemaphore
     
-    override init() {
-        infosMap = NSMapTable(keyOptions: [.strongMemory, .objectPointerPersonality], valueOptions: [.strongMemory, .objectPointerPersonality])
+    //默认强引用，会引用被观察者，仅当KVOController释放时，其会被释放和移除观察
+    //设置弱引用观察者，弱引用被观察者释放时可以不解除监听，如果是单例，则可能会出现多次监听问题
+    //设置弱引用适用于经常刷新数据的视图，以减少内存开销
+    //实际并不推荐弱引用，虽然不释放没什么影响，但如果系统缓存了新生成的监听子类，若监听的属性没释放，可能会有额外性能开销
+    init(_ isWeakObserved: Bool = false) {
+        infosMap = NSMapTable(keyOptions: [isWeakObserved ? .weakMemory : .strongMemory, .objectPointerPersonality], valueOptions: [.strongMemory, .objectPointerPersonality])
         semaphore = DispatchSemaphore(value: 1)
     }
 
@@ -66,7 +70,7 @@ class LLKVOController: NSObject {
         }
         
         //添加新内容
-        infoSet?.add(info)
+        infoSet!.add(info)
         
         semaphore.signal()
         //添加观察

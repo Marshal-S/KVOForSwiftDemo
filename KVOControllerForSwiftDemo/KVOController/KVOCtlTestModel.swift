@@ -10,4 +10,8 @@ import UIKit
 class KVOCtlTestModel: NSObject {
     @objc dynamic var age: Int = 0
     @objc dynamic var name: String?
+    
+    deinit {
+        print("KVOCtlTestModel释放了")
+    }
 }

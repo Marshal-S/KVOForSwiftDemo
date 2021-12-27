@@ -8,10 +8,11 @@
 import UIKit
 
 var sharedModel = KVOCtlTestModel()
+//var kvoController: LLKVOController = LLKVOController()
 
 class KVOControllerTestController: UIViewController {
     var kvoModel: KVOCtlTestModel?
-    var kvoController: LLKVOController?
+    var kvoController: LLKVOController = LLKVOController()
     
     var btn: UIButton?
 
@@ -24,18 +25,16 @@ class KVOControllerTestController: UIViewController {
         
         sharedModel.name = "123"
         
-        kvoController = LLKVOController()
-        
         kvoModel = KVOCtlTestModel()
         kvoModel!.name = "哈哈"
         
-        kvoController?.observer(kvoModel!, "name") { [unowned self] newValue, object in
+        kvoController.observer(kvoModel!, "name") { [unowned self] newValue, object in
             print("kvoModel:name", newValue)
         }
-        kvoController?.observer(sharedModel, "name") { [unowned self] newValue, object in
+        kvoController.observer(sharedModel, "name") { [unowned self] newValue, object in
             print("sharedModel:name", newValue)
         }
-        kvoController?.observer(kvoModel!, "age") { [unowned self] newValue, object  in
+        kvoController.observer(kvoModel!, "age") { [unowned self] newValue, object  in
             print("kvoModel:age", newValue)
         }
 //        kvoController?.unobserver(sharedModel)

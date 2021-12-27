@@ -15,7 +15,7 @@ class KVOObserverTestModel: NSObject {
     var name: String?
     
     deinit {
-        print("KVOObserver释放了")
+        print("KVOObserverTestModel释放了")
     }
 }
 
